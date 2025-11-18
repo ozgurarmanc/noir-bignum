@@ -2,9 +2,7 @@ use crate::utils::map::invert_array;
 /// conversions between big endian and little endian byte arrays and BigNum instances
 /// the byte serialization should have `(MOD_BITS + 7) / 8` bytes.
 /// each 120-bit limb is represented by 15 bytes, and there are fewer bytes for covering the most significant limb
-pub(crate) fn from_be_bytes<let N: u32, let MOD_BITS: u32>(
-    x: [u8; (MOD_BITS + 7) / 8],
-) -> [u128; N] {
+pub fn from_be_bytes<let N: u32, let MOD_BITS: u32>(x: [u8; (MOD_BITS + 7) / 8]) -> [u128; N] {
     let num_bits = (MOD_BITS + 7) / 8 * 8;
     assert(num_bits >= MOD_BITS);
     assert(num_bits - MOD_BITS < 8);
@@ -39,9 +37,7 @@ pub(crate) fn from_be_bytes<let N: u32, let MOD_BITS: u32>(
     result
 }
 
-pub(crate) fn to_be_bytes<let N: u32, let MOD_BITS: u32>(
-    val: [u128; N],
-) -> [u8; (MOD_BITS + 7) / 8] {
+pub fn to_be_bytes<let N: u32, let MOD_BITS: u32>(val: [u128; N]) -> [u8; (MOD_BITS + 7) / 8] {
     let mut result: [u8; (MOD_BITS + 7) / 8] = [0; (MOD_BITS + 7) / 8];
     // the last limb will not have all the 15 bytes so we deal with the full limbs first
     for i in 0..N - 1 {
@@ -62,17 +58,13 @@ pub(crate) fn to_be_bytes<let N: u32, let MOD_BITS: u32>(
     result
 }
 
-pub(crate) fn to_le_bytes<let N: u32, let MOD_BITS: u32>(
-    val: [u128; N],
-) -> [u8; (MOD_BITS + 7) / 8] {
+pub fn to_le_bytes<let N: u32, let MOD_BITS: u32>(val: [u128; N]) -> [u8; (MOD_BITS + 7) / 8] {
     let result_be: [u8; (MOD_BITS + 7) / 8] = to_be_bytes(val);
     let result = invert_array(result_be);
     result
 }
 
-pub(crate) fn from_le_bytes<let N: u32, let MOD_BITS: u32>(
-    x: [u8; (MOD_BITS + 7) / 8],
-) -> [u128; N] {
+pub fn from_le_bytes<let N: u32, let MOD_BITS: u32>(x: [u8; (MOD_BITS + 7) / 8]) -> [u128; N] {
     // make the bytes big endian
     let be_x = invert_array(x);
     from_be_bytes(be_x)
